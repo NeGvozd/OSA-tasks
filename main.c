@@ -7,48 +7,47 @@
 
 int main(int argc, char *argv[], char *envp[])
 {    
-    FILE *f;
-    f = fopen(argv[1], "r");
+	FILE *f;
+	f = fopen(argv[1], "r");
     
-    // if (fopen == failed)
-    // {
+	// if (fopen == failed)
+	// {
 
-    // }
+	// }
 
-    char str[FILENAME_MAX];
+	char str[FILENAME_MAX];
 	int t = 0;
 	int input = 0;
+	
+	while(!feof(f))
+	{
+		fscanf(f, "%d %s", &t, str);
 
-    while(!feof(f))
-    {
-        fscanf(f, "%d %s", &t, str);
+		// if (t < 0)
+        	// {
 
-        // if (t < 0)
-        // {
+        	// }
 
-        // }
-
-        printf("Command \"%s\" will be executed with %dsec delay\n", str, t);
-        pid_t pid = fork();
-
-        switch(pid)
-        {
-        case -1:
-            perror("fork");
-            return -1;
-        case 0:
+        	printf("Command \"%s\" will be executed with %dsec delay\n", str, t);
+	    
+        	pid_t pid = fork();
+        	switch(pid)
+        	{
+        	case -1:
+            		perror("fork");
+            		return -1;
+        	case 0:
 			sleep(t);
-            printf("%s is executed\n", str);
+            		printf("%s is executed\n", str);
 			execlp(str, str, NULL);
 
 			printf("\"%s\" failed!\n", str);
 			exit(EXIT_FAILURE);
-            //return 13;
-        }
-    }
+        	}
+	}
 
-    while (wait(NULL) != -1) {};
+   	while (wait(NULL) != -1) {};
 
-    fclose(f);
+    	fclose(f);
 	return EXIT_SUCCESS;
 }
